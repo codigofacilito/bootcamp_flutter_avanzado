@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 
 import '../../utils/constants.dart';
@@ -10,11 +12,17 @@ class Api{
       baseUrl:url,
       connectTimeout: const Duration(seconds: 30000),
       receiveTimeout: const Duration(seconds: 30000),
+      headers: {
+        HttpHeaders.authorizationHeader:"",
+        HttpHeaders.contentTypeHeader: "application/json; charset=utf-8"
+      }
     )
     );
   }
-  Future get(String endpoint)async{
+
+  Future get(String endpoint,{String accessToken=""})async{
     try{
+      addToken(accessToken);
       final Response response = await dio.get(endpoint);
       return validateResponse(response);
     }on DioException catch(error){
@@ -22,8 +30,9 @@ class Api{
     }
   }
 
-  Future post(String endpoint,Map body)async{
+  Future post(String endpoint,Map body,{String accessToken=""})async{
     try{
+      addToken(accessToken);
       final Response response = await dio.post(endpoint,data: body);
       return validateResponse(response);
     }on DioException catch(error){
@@ -31,8 +40,9 @@ class Api{
     }
   }
 
-  Future put(String endpoint,Map body)async{
+  Future put(String endpoint,Map body,{String accessToken=""})async{
     try{
+      addToken(accessToken);
       final Response response = await dio.put(endpoint,data: body);
       return validateResponse(response);
     }on DioException catch(error){
@@ -40,8 +50,9 @@ class Api{
     }
   }
 
-  Future delete(String endpoint)async{
+  Future delete(String endpoint,{String accessToken=""})async{
     try{
+      addToken(accessToken);
       final Response response = await dio.delete(endpoint);
       return validateResponse(response);
     }on DioException catch(error){
@@ -49,7 +60,10 @@ class Api{
     }
   }
 
-
+  addToken(String accessToken){
+    dio.options.headers[HttpHeaders.contentTypeHeader] = (accessToken.isNotEmpty)? "application/x-www-form-urlencoded":"application/json; charset=utf-8";
+    dio.options.headers[HttpHeaders.authorizationHeader]= (accessToken.isNotEmpty)? "Bearer $accessToken":"";
+  }
   validateResponse(Response response){
     switch(response.statusCode){
       case 200:
