@@ -22,8 +22,6 @@ class LoginScreenState extends State<LoginScreen>{
   Widget build(BuildContext context) {
     sessionState = Provider.of<MainState>(context).sessionState;
 
-    emailCtrl.text ="marines@hotmail.com";
-    passCtrl.text ="@Admin1234";
     // TODO: implement build
    return SafeArea(child: Scaffold(
      body: SingleChildScrollView(
