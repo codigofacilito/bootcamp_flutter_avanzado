@@ -121,6 +121,22 @@ mixin _$PurchasesState on _PurchasesStateBase, Store {
     });
   }
 
+  late final _$currentProductAtom =
+      Atom(name: '_PurchasesStateBase.currentProduct', context: context);
+
+  @override
+  Observable<ProductDetails?>? get currentProduct {
+    _$currentProductAtom.reportRead();
+    return super.currentProduct;
+  }
+
+  @override
+  set currentProduct(Observable<ProductDetails?>? value) {
+    _$currentProductAtom.reportWrite(value, super.currentProduct, () {
+      super.currentProduct = value;
+    });
+  }
+
   late final _$_PurchasesStateBaseActionController =
       ActionController(name: '_PurchasesStateBase', context: context);
 
@@ -136,6 +152,50 @@ mixin _$PurchasesState on _PurchasesStateBase, Store {
   }
 
   @override
+  dynamic buyProduct() {
+    final _$actionInfo = _$_PurchasesStateBaseActionController.startAction(
+        name: '_PurchasesStateBase.buyProduct');
+    try {
+      return super.buyProduct();
+    } finally {
+      _$_PurchasesStateBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic getProduct(String key) {
+    final _$actionInfo = _$_PurchasesStateBaseActionController.startAction(
+        name: '_PurchasesStateBase.getProduct');
+    try {
+      return super.getProduct(key);
+    } finally {
+      _$_PurchasesStateBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic buySubscription() {
+    final _$actionInfo = _$_PurchasesStateBaseActionController.startAction(
+        name: '_PurchasesStateBase.buySubscription');
+    try {
+      return super.buySubscription();
+    } finally {
+      _$_PurchasesStateBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic addCurrentProduct(ProductDetails productDetails) {
+    final _$actionInfo = _$_PurchasesStateBaseActionController.startAction(
+        name: '_PurchasesStateBase.addCurrentProduct');
+    try {
+      return super.addCurrentProduct(productDetails);
+    } finally {
+      _$_PurchasesStateBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 isAvailable: ${isAvailable},
@@ -144,7 +204,8 @@ queryError: ${queryError},
 subscriptions: ${subscriptions},
 products: ${products},
 currentIndexSubs: ${currentIndexSubs},
-currentSubs: ${currentSubs}
+currentSubs: ${currentSubs},
+currentProduct: ${currentProduct}
     ''';
   }
 }

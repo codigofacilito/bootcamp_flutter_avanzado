@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:mobx/mobx.dart';
 
@@ -65,12 +66,43 @@ abstract class _PurchasesStateBase with Store {
   @observable
   Observable<ProductDetails?>? currentSubs;
 
+  @observable
+  Observable<ProductDetails?>? currentProduct;
+
   @action
   addCurrentSubs(int index){
     currentIndexSubs.value = index;
     currentSubs = Observable(subscriptions[index]);
   }
 
+  @action
+  buyProduct() {
+    PurchaseParam purchaseParam = PurchaseParam(
+      productDetails: currentProduct!.value!,
+      applicationUserName: null,
+    );
+    //No Consumible es producto se compra una vez
+    inAppPurchase.buyConsumable(
+        purchaseParam: purchaseParam);
+  }
+
+  @action
+  getProduct(String key) {
+    if (key.isNotEmpty) {
+      return products.firstWhereOrNull((product) => product.id == key);
+    }
+  }
+  @action
+  buySubscription(){
+    PurchaseParam purchaseParam = PurchaseParam(productDetails: currentSubs!.value!);
+    inAppPurchase.buyConsumable(purchaseParam: purchaseParam);
+  }
+
+
+  @action
+  addCurrentProduct(ProductDetails productDetails){
+    currentProduct = Observable(productDetails);
+  }
 
   Future<void> fetchSubsAndProducts()async{
     //Informacion fake
@@ -88,10 +120,7 @@ abstract class _PurchasesStateBase with Store {
 
   }
 
-  buySubscription(){
-    PurchaseParam purchaseParam = PurchaseParam(productDetails: currentSubs!.value!);
-    inAppPurchase.buyConsumable(purchaseParam: purchaseParam);
-  }
+
 
    listenToPurchaseUpdate(List<PurchaseDetails> purchaseDetails){
     purchaseDetails.forEach((PurchaseDetails purchaseDetails) {

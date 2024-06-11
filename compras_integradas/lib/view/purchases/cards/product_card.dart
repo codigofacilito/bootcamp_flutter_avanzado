@@ -27,11 +27,11 @@ class ProductCard extends StatelessWidget{
          trailing:SizedBox(
              width: 100,
              child: ElevatedButton(onPressed: (){
-               /*
+
                //crear los siguientes metodos en purchasesState
                purchasesState.addCurrentProduct(productDetails);
                purchasesState.buyProduct();
-               */
+
              }, child: Text(productDetails.price),style: ElevatedButton.styleFrom(
                  backgroundColor: blue,
                  foregroundColor: Colors.white,
